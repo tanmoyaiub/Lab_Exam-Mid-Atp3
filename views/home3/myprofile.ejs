@@ -5,11 +5,11 @@
 </head>
 <body>
 	<div>
-		<h2>Welcome home , <%= user.username%> </h2>
+		<h2>Its your Profile , <%= user.username%> </h2>
 
 	</div>
-	<a href="/home3/approve_info">Approved_Post</a> ||
-	<a href="/home3/myprofile">My profile</a> ||
+	
+	<a href="/home3/editProfile/<%= user.id %>">Edit</a> |
 	<a href="/logout">Logout</a><br>
 
 	Id:<%= user.id %><br>

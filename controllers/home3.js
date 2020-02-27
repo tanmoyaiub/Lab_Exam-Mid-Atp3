@@ -18,25 +18,20 @@ router.get('/', function(req, res){
 	});
 });
 
-router.get('/view_users' , function(req , res){
-
-	userModel.getAll(function(results){
-		if(results.length > 0){
-			res.render('home/view_users' , {userlist: results});
-		}else{
-			res.redirect('/home');
-		}
-		
+router.get('/myprofile', function(req, res){
+	
+	userModel.getByUname(req.cookies['username'] , function(result){
+		res.render('home3/myprofile' , {user: result});
 	});
 });
 
-router.get('/edit/:id', function(req, res){
+router.get('/editProfile/:id', function(req, res){
 	userModel.getById(req.params.id, function(result){
-		res.render('home/edit', {user: result});
+		res.render('home3/editProfile', {user: result});
 	});
 });
 
-router.post('/edit/:id' , function(req , res){
+router.post('/editProfile/:id' , function(req , res){
 	var user = {
 		id: req.params.id , 
 		username: req.body.username ,
@@ -46,47 +41,25 @@ router.post('/edit/:id' , function(req , res){
 
 	userModel.update(user , function(status){
 		if(status){
-			res.redirect('/home/view_users')
+			res.redirect('/home3/myprofile')
 		}else{
-			res.redirect('/home/edit/' + req.params.id);
+			res.redirect('/home3/editProfile/' + req.params.id);
 		}
 	});
 
 });
 
-router.get('/delete/:id' , function(req , res){
-	userModel.delete(req.params.id , function(status){
-		if(status){
-			console.log("Deleted Successfully!");
-			res.redirect('/home/view_users');
+router.get('/approve_info' , function(req , res){
+
+	userModel.ApproveInfo_User(function(results){
+		if(results.length > 0){
+			res.render('home3/approve_info' , {userlist: results});
 		}else{
-			res.redirect('/home/view_users/' + req.params.id);
+			res.redirect('/home3');
 		}
+		
 	});
 });
-
-router.get('/addusers' , function(req , res){
-	res.render('home/register');
-});
-
-
-router.post("/addusers" , function(req , res){
-	var user = {
-		id: req.params.id ,
-		username: req.body.username ,
-		password: req.body.password ,
-		type: 	  req.body.type
-	};
-
-	userModel.insert(user , function(status){
-		//where the 'user' comes from??
-		if(status){
-			res.redirect('/home/view_users')
-		}else{
-			res.redirect('/home/addusers/' + req.params.id)
-		}
-	})
-})
 
 
 module.exports = router;

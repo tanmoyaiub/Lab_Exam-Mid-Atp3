@@ -44,7 +44,7 @@ router.get('/editProfile/:id', function(req, res){
 	});
 });
 
-router.post('/edit/:id' , function(req , res){
+router.post('/editProfile/:id' , function(req , res){
 	var user = {
 		id: req.params.id , 
 		username: req.body.username ,
@@ -119,8 +119,60 @@ router.post("/addusers" , function(req , res){
 		}else{
 			res.redirect('/home/addusers/' + req.params.id)
 		}
-	})
-})
+	});
+});
+
+router.get('/req_info' , function(req , res){
+
+	userModel.InfogetAllforAdmin(function(results){
+		if(results.length > 0){
+			res.render('home/req_info' , {userlist: results});
+		}else{
+			res.redirect('/home');
+		}
+		
+	});
+});
+
+
+router.get('/approve_info' , function(req , res){
+
+	userModel.ApproveInfo_Admin(function(results){
+		if(results.length > 0){
+			res.render('home/approve_info' , {userlist: results});
+		}else{
+			res.redirect('/home');
+		}
+		
+	});
+});
+
+router.get('/req_info/:id' , function(req , res){
+
+	
+
+	userModel.updateApprove(req.params.id ,function(results){
+		if(results.length > 0){
+			res.render('home/req_info' , {userlist: results});
+		}else{
+			res.redirect('/home');
+		}
+		
+	});
+});
+
+router.get('/req_info/delete/:id' , function(req , res){
+
+	userModel.deleteInfo(req.params.id , function(status){
+		if(status){
+			console.log("Deleted Successfully!");
+			res.redirect('/home/req_info');
+		}else{
+			res.redirect('/home/req_info/' + req.params.id);
+		}
+	});
+});
+
 
 
 module.exports = router;
